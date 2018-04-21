@@ -1,15 +1,15 @@
 """ 
-    Pi generator
-    Generate pi up to a specific digit.
+    E constant generator
+    Generate e up to a specific digit.
 
     INPUT:
     1) precision - number of digits (after comma) to generate [NUMBER]
 
     OUTPUT:
-    generated pi
+    generated e
 """
 from sys import argv
-from math import pi
+from math import e
 
 if __name__ == "__main__":
     # Parse and check input
@@ -21,7 +21,7 @@ if __name__ == "__main__":
             pass
 
     if precision <= 0:
-        print("Usage: pi_generator <precision>\n    precision - number of digits (after comma) to generate [NUMBER; min: 1]")
+        print("Usage: e_generator <precision>\n    precision - number of digits (after comma) to generate [NUMBER; min: 1]")
     else:
         my_pi = 0
         for n in range(precision):
