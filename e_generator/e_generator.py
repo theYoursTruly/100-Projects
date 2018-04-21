@@ -11,6 +11,13 @@
 from sys import argv
 from math import e
 
+
+def factorial(n):
+    fac = 1;
+    for i in range(n):
+        fac *= i+1
+    return fac
+
 if __name__ == "__main__":
     # Parse and check input
     precision = -1
@@ -23,7 +30,13 @@ if __name__ == "__main__":
     if precision <= 0:
         print("Usage: e_generator <precision>\n    precision - number of digits (after comma) to generate [NUMBER; min: 1]")
     else:
-        my_pi = 0
-        for n in range(precision):
-            my_pi += ((1/16) ** n) * ((4 / (8*n + 1)) - (2 / (8*n + 4)) - (1 / (8*n + 5)) - (1 / (8*n + 6)))
-        print("Calculated pi: {1:.{0}}\nReal pi:       {2:.{0}}".format(precision+1, my_pi, pi))
+        my_e = 2
+        n = 1
+        chunk = 1
+        while chunk >= (10 ** (-precision)):
+            n += 1
+            chunk = 1 / factorial(n)
+            my_e += chunk
+            print(n, chunk, my_e)
+
+        print("Calculated e: {1:.{0}}\nReal e:       {2:.{0}}".format(precision+1, my_e, e))
