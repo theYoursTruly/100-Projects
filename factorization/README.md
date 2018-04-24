@@ -1,0 +1,2 @@
+# Prime factorization
+Every number can be presented as a product of one or more prime numbers. Finding set of prime numbers is called [prime factorization](https://en.wikipedia.org/wiki/Fundamental_theorem_of_arithmetic). Algorithm for that is simply to try and divide the given number by every other from 2 to it's square, until it's smaller than (or equal to) the divider. It'd be better to just divide by primes, but we'd need a database of all primes, because calculating them is [*pretty hard*](https://en.wikipedia.org/wiki/Formula_for_primes).
