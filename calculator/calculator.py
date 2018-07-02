@@ -71,7 +71,7 @@ def draw_ui():
     for idx, elem in enumerate([" x\u207F", " √ ", "mod", " 4 ", " 5 ", " 6 ", " - "]):
         app.addButton(elem, push, 4, idx)
     # row 5
-    for idx, elem in enumerate(["log", " ln", " a!", " 1 ", " 2 ", " 3 ", " + "]):
+    for idx, elem in enumerate(["log", " ln", " x!", " 1 ", " 2 ", " 3 ", " + "]):
         app.addButton(elem, push, 5, idx)
     # row 6
     for idx, elem in enumerate([" e ", " π ", " . "]):
@@ -82,7 +82,12 @@ def draw_ui():
 
 # Add given character to the current calculation line
 def push(button):
-    app.setLabel("operation", app.getLabel("operation") + button.strip())
+    text = button.strip()
+    if text == "x\u207F":
+        text = "^2"
+    elif text == "x!":
+        text = "!"
+    app.setLabel("operation", app.getLabel("operation") + text)
 
 # Manage calculator memory
 def memory(button):
