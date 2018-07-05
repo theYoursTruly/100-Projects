@@ -44,8 +44,8 @@ def key_press(key):
 UI looks like this:
 [                       operation ]
 [                          result ]
-[ MC][ MR][ M+][ ( ][ ) ][ % ][ : ]
-[sin][cos][tan][ 7 ][ 8 ][ 9 ][ x ]
+[ MC][ MR][ M+][ ( ][ ) ][ % ][ / ]
+[sin][cos][tan][ 7 ][ 8 ][ 9 ][ * ]
 [x^y][ √ ][mod][ 4 ][ 5 ][ 6 ][ - ]
 [log][ ln][ x!][ 1 ][ 2 ][ 3 ][ + ]
 [ e ][ π ][ . ][ C ][ 0 ][      = ]
@@ -62,13 +62,13 @@ def draw_ui():
     # row 2
     for idx, elem in enumerate([" MC", " MR",  " M+"]):
         app.addButton(elem, memory, 2, idx)
-    for idx, elem in enumerate([" ( ", " ) ", " % ", " : "], 3):
+    for idx, elem in enumerate([" ( ", " ) ", " % ", " / "], 3):
         app.addButton(elem, push, 2, idx)
     # row 3
-    for idx, elem in enumerate(["sin", "cos", "tan", " 7 ", " 8 ", " 9 ", " x "]):
+    for idx, elem in enumerate(["sin", "cos", "tan", " 7 ", " 8 ", " 9 ", " * "]):
         app.addButton(elem, push, 3, idx)
     # row 4
-    for idx, elem in enumerate([" x\u207F", " √ ", "mod", " 4 ", " 5 ", " 6 ", " - "]):
+    for idx, elem in enumerate([" x\u1D43", " √ ", "mod", " 4 ", " 5 ", " 6 ", " - "]):
         app.addButton(elem, push, 4, idx)
     # row 5
     for idx, elem in enumerate(["log", " ln", " x!", " 1 ", " 2 ", " 3 ", " + "]):
@@ -83,8 +83,8 @@ def draw_ui():
 # Add given character to the current calculation line
 def push(button):
     text = button.strip()
-    if text == "x\u207F":
-        text = "^2"
+    if text == "x\u1D43":
+        text = "^"
     elif text == "x!":
         text = "!"
     app.setLabel("operation", app.getLabel("operation") + text)
@@ -106,9 +106,21 @@ def undo(button):
         operation = operation[:-1]
         app.setLabel("operation", operation)
 
-# Make an actual calculation
+# TODO: How to do it linearily if parentheses make me parse the text twice (per each parenthesis)
+# Process equal button pressing
 def calculate(button):
-    pass #TODO
+    result = process("(" + app.getLabel("operation") + ")")
+    app.setLabel("result", result)
+
+# Make actual calculations
+def process(input):
+    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    extras = ["e", "π"]
+    result = 0
+    for i, char in enumerate(input):
+        previous = 1 if input[i-1]
+        if char in ["0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0"]:
+            if last_input in [")", "e", ]
 
 if __name__ == "__main__":
     with gui("Calculator") as app:
