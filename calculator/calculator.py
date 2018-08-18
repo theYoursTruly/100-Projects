@@ -68,7 +68,7 @@ def draw_ui():
     for idx, elem in enumerate(["sin", "cos", "tan", " 7 ", " 8 ", " 9 ", " * "]):
         app.addButton(elem, push, 3, idx)
     # row 4
-    for idx, elem in enumerate([" x\u1D43", " √ ", "mod", " 4 ", " 5 ", " 6 ", " - "]):
+    for idx, elem in enumerate([" xⁿ", " √ ", "mod", " 4 ", " 5 ", " 6 ", " - "]):
         app.addButton(elem, push, 4, idx)
     # row 5
     for idx, elem in enumerate(["log", " ln", " x!", " 1 ", " 2 ", " 3 ", " + "]):
@@ -83,7 +83,7 @@ def draw_ui():
 # Add given character to the current calculation line
 def push(button):
     text = button.strip()
-    if text == "x\u1D43":
+    if text == "xⁿ":
         text = "^"
     elif text == "x!":
         text = "!"
@@ -106,21 +106,65 @@ def undo(button):
         operation = operation[:-1]
         app.setLabel("operation", operation)
 
-# TODO: How to do it linearily if parentheses make me parse the text twice (per each parenthesis)
 # Process equal button pressing
 def calculate(button):
-    result = process("(" + app.getLabel("operation") + ")")
+    text = "0" if app.getLabel("operation") == "" else app.getLabel("operation")
+    result = process("(" + text + ")")
     app.setLabel("result", result)
 
-# Make actual calculations
-def process(input):
-    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    extras = ["e", "π"]
+# Process text and print the result of calculations
+def process(text):
     result = 0
-    for i, char in enumerate(input):
-        previous = 1 if input[i-1]
-        if char in ["0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0"]:
-            if last_input in [")", "e", ]
+    pos = 1
+    number_str = ""
+    number_dig = 0
+    while pos <= len(text)-2:
+        char_type, valid = get_type(text[pos], text[pos-1], text[pos+1]):
+        if not valid:
+            result = 0
+            break
+        if char_type == "number" or char_type == "dot":
+            number += text[pos]
+        elif char_type == "extra":
+            number = str(math.pi) if text[pos] == "π" else str(math.e)
+        elif char_type in ["preop", "postop", "dblop"]:
+
+        pos += 1
+    app.setLabel("result", result)
+
+# Each character is either a number, extra number or operator.
+# Check what it is and if it has valid neighbours.
+# |Group            | Allowed after        | Can be followed by   | Members                     |
+# | --------------- | -------------------- | -------------------- | --------------------------- |
+# |Number           | Number, Operator     | Number, Operator     | 0 .. 9                      |
+# |Extra number     | Operator             | Operator             | e, π                        |
+# |Prefix operator  | Number, Extra number | Operator             | x!, %, )                    |
+# |Postfix operator | Operator             | Number, Extra number | (, √, ln, log, sin, cos, tan|
+# |Double operator  | Number, Extra number | Number, Extra number | /, *, -, +, xⁿ, mod         |
+# |Dot operator     | Number               | Number               | .                           |
+def get_type(item, pre, post):
+    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    extras  = ["e", "π"]
+    dot     = ["."]
+    preop   = ["!", "%", ")"]
+    postop  = ["(", "√", "ln", "log", "sin", "cos", "tan"]
+    dblop   = ["/", "*", "-", "+", "^", "mod"]
+    operators = dot + preop + postop + dblop
+    
+    if item in numbers:
+        return ("number", pre in (numbers + operators) and post in (numbers + operators))
+    elif item in extras:
+        return ("extra", pre in operators and post in operators)
+    elif item in preop:
+        return ("preop", pre in (numbers + extras) and post in operators)
+    elif item in postop:
+        return ("postop", pre in operators and post in (numbers + extras))
+    elif item in dblop:
+        return ("dblop", pre in (numbers + extras) and post in (numbers + extras))
+    elif item in dot:
+        return ("dot", pre in numbers and post in numbers)
+    else: # fail any other character
+        return ("unknown", False)
 
 if __name__ == "__main__":
     with gui("Calculator") as app:

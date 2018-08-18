@@ -22,4 +22,4 @@ Each category can be preceded and followed by one or more of the others. That sp
 **Note:** Beginning and end of the equation counts as an operator.
 
 ## Parentheses
-Another *problem* is handling parentheses. Parsing input left to right makes it a little easier. When we encounter a parenthesis, we call a processing function recurrently and use the result as part of the evaluated equation.
+Another *problem* is handling parentheses. Parsing input left to right makes it a little easier. When we encounter a parenthesis, we call a processing function recurrently and use the result as part of the evaluated equation. This decreases our efficiency, but is necessary.
